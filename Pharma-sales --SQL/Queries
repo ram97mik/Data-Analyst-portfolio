@@ -1,19 +1,19 @@
 # Combining the tables into one table
 
 select datum, M01AB, M01AE, N02BA,N02BE, N05B, N05C, R03, R06, Year, Month, Hour, Weekday_Name
-from `pharma-sales-381807.pharma_sales.daily`
+	from `pharma-sales-381807.pharma_sales.daily`
 
 union all
 select  DATE(datum), M01AB, M01AE, N02BA, N02BE, N05B, N05C, R03, R06, Year, Month, Hour, Weekday_Name
-from `pharma-sales-381807.pharma_sales.hourly`
+     from `pharma-sales-381807.pharma_sales.hourly`
 
 union all 
 select datum, M01AB, M01AE, N02BA, N02BE, N05B, N05C, R03, R06,null as  Year,null as Month,null as Hour, null asWeekday_Name
-from `pharma-sales-381807.pharma_sales.monthly`
+   from `pharma-sales-381807.pharma_sales.monthly`
 
 union all
-select datum, M01AB, M01AE, N02BA, N02BE, N05B, N05C, R03, R06, null as Year,null as Month,null as Hour,null as Weekday_Name
-from `pharma-sales-381807.pharma_sales.weekly`
+    select datum, M01AB, M01AE, N02BA, N02BE, N05B, N05C, R03, R06, null as Year,null as Month,null as Hour,null as Weekday_Name
+        from `pharma-sales-381807.pharma_sales.weekly`
 
 
 # Change column’s names
@@ -29,16 +29,16 @@ RENAME COLUMN R03 to obstructive_airway_diseases_drugs,
 RENAME COLUMN R06 to Antihistamines_systemic_use
 
 
-#Delete rows
+# Delete rows
 DELETE FROM `pharma-sales-381807.pharma_sales.total_sales`
 WHERE Hour > 24;
 
 
-#	Delete all rows with all drugs values 0 ( at the same time)
+# Delete all rows with all drugs values 0 ( at the same time)
 
 delete
-from `pharma-sales-381807.pharma_sales.total_sales` 
-where  
+  from `pharma-sales-381807.pharma_sales.total_sales` 
+    where  
   acetic_acid_derivatives_and_related_substances = 0.0
   And Propionic_acid_derivatives = 0.0
   And Salicylic_acid_derivatives = 0.0
@@ -49,14 +49,12 @@ where
   And Antihistamines_systemic_use = 0.0
 
 
-
-
- #remove duplicates and nulls + order by date
+ # remove duplicates and nulls + order by date
 
 select distinct *
-from (select  *
-      from `pharma-sales-381807.pharma_sales.total_sales` as sale
-       where  
+   from (select  *
+          from `pharma-sales-381807.pharma_sales.total_sales` as sale
+           where  
             date is not null
               And acetic_acid_derivatives_and_related_substances is not null
               And Propionic_acid_derivatives is not null
@@ -72,10 +70,6 @@ from (select  *
 
     order by date asc
 
-
-
-
-
 # average sales of each drug / each year 
 SELECT 
 year,
@@ -89,16 +83,14 @@ year,
   AVG(Antihistamines_systemic_use) AS antihistamine_avg
 
 FROM `pharma-sales-381807.pharma_sales.total_sales`
-
 where year is not null
 group by Year
 order by year
 
 
-
 # sum of each drug by year
 SELECT 
-year,
+ year,
   SUM(acetic_acid_derivatives_and_related_substances) AS sum_acetic_acid,
   SUM(Propionic_acid_derivatives) AS sum_Propionic,
   SUM(Salicylic_acid_derivatives) AS sum_salicylic,
@@ -107,11 +99,11 @@ year,
   SUM(Hypnotics_sedatives_drugs) AS hypnotics,
   SUM(obstructive_airway_diseases_drugs) AS sum_obstructive_airway_diseases_drugs,
   SUM(Antihistamines_systemic_use) AS sum_antihistamine,
+  
 FROM `pharma-sales-381807.pharma_sales.total_sales`
 where year is not null
 group by Year
 order by year
-
 
 
 
