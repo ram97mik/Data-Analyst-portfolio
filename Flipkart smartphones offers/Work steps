@@ -1,0 +1,6 @@
+merge the csv files using power query into one file which can be handled by Excel 
+split the long strings using textsplit(cell,",") which is more efficient than SQL's substring(charindex)   in this particular data
+removing "[" and "]" and "'" from both ends of  the string  using  =SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(cells, "'", ""), "[", ""), "]", "")
+fix overlapped columns 
+there are mobiles without original price >>>> offer price + offer price * off now
+perform some additional cleaning  like removing duplicates, unifying values and names , removing Nulls and blanks etc
